@@ -1616,7 +1616,8 @@ namespace OpenMined.Syft.Tensor
             int numSplits = splitSections.Length;
             var splits = new FloatTensor[numSplits];
             int offset = 0;
-            
+
+            //Gather subset of elements corresponding to each split 
             for(int i = 0; i < numSplits; i++)
             {
                 int[] splitShape = (int[]) Shape.Clone();
