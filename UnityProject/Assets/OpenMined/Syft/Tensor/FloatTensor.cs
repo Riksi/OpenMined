@@ -819,16 +819,11 @@ namespace OpenMined.Syft.Tensor
                     Sin(inline: true);
                     return Id.ToString();
                 }
-                //For splitting, though dim has a default value of zero
-                //we are getting it from msgObj.tensorIndexParams 
-                //because otherwise we have no way of knowing whether
-                //or not the last element is a split section
-                //or an axis dimension. But could perhaps use
-                //some sort of delimiter here. 
+
                 case "split_by_size":
                 {
                     int splitSize = int.Parse(msgObj.tensorIndexParams[0]);
-                    int dim = int.Parse(msgObj.tensorIndexParams[1]);
+                    int dim = 0;
 
                     if (msgObj.tensorIndexParams.Length > 1)
                     {
@@ -841,6 +836,13 @@ namespace OpenMined.Syft.Tensor
                     }
                     return string.Join(",",splitsString);
                 }
+
+                //TODO: For splitting, though dim has a default value of 0
+                //we are getting it from msgObj.tensorIndexParams 
+                //because otherwise we don't know whether
+                //the last element is a split size
+                //or an axis dimension. But could perhaps use
+                //a delimiter or do this some other way.
                 case "split_by_sections":
                 {
                     int numSections = msgObj.tensorIndexParams.Length-1;

@@ -1090,7 +1090,7 @@ namespace OpenMined.Syft.Tensor
             if (p <= 0){
                 throw new InvalidOperationException("p must be greater than 0");
             }
-            result = Pow(p).Sum(dim, keepdim).Pow(1/p);
+            result = Abs().Pow(p).Sum(dim, keepdim).Pow(1/p);
             
             return result;
 

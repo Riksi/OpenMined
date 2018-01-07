@@ -1539,7 +1539,7 @@ namespace OpenMined.Tests.Editor.FloatTensor
             Assert.AreEqual(result.Shape.Length, 1);
             Assert.AreEqual(result.Shape[0], 1);
             Assert.AreEqual(result.Size, 1);
-            Assert.AreEqual(result[0], 3.0);
+            Assert.AreEqual(result[0], 21.0);
 
             result = tensor.Norm(0,p:1);
 
@@ -1547,9 +1547,9 @@ namespace OpenMined.Tests.Editor.FloatTensor
             Assert.AreEqual(result.Shape.Length, 1);
             Assert.AreEqual(result.Shape[0], 3);
             Assert.AreEqual(result.Size, 3);
-            Assert.AreEqual(result[0], 3.0);
-            Assert.AreEqual(result[1], -3.0);
-            Assert.AreEqual(result[2], 3.0);
+            Assert.AreEqual(result[0], 5.0);
+            Assert.AreEqual(result[1], 7.0);
+            Assert.AreEqual(result[2], 9.0);
 
             result = tensor.Norm(1,p:1);
 
@@ -1557,8 +1557,8 @@ namespace OpenMined.Tests.Editor.FloatTensor
             Assert.AreEqual(result.Shape.Length, 1);
             Assert.AreEqual(result.Shape[0], 2);
             Assert.AreEqual(result.Size, 2);
-            Assert.AreEqual(result[0], -2.0);
-            Assert.AreEqual(result[1], 5.0);
+            Assert.AreEqual(result[0], 6.0);
+            Assert.AreEqual(result[1], 15.0);
 
             result = tensor.Norm(keepdim:true);
 
@@ -1588,44 +1588,6 @@ namespace OpenMined.Tests.Editor.FloatTensor
             Assert.AreEqual(result.Size, 2);
             Assert.AreEqual(result[0], 3.74165739f, 1e-3);
             Assert.AreEqual(result[1], 8.77496439f, 1e-3);
-
-            float[] data2 = new float[]
-            {
-                1, 2, 3,
-                4, 5, 6
-            };
-
-            int[] shape2 = new int[] {2, 3};
-            var tensor2 = ctrl.floatTensorFactory.Create(_data: data2, _shape: shape2);
-
-            Console.WriteLine("tensor2 {0}", string.Join(", ", tensor2.Data));
-
-            result = tensor2.Norm(p:3);
-
-            Console.WriteLine("tensor2.Norm(p:3) {0}", string.Join(", ", result.Data));
-            Assert.AreEqual(result.Shape.Length, 1);
-            Assert.AreEqual(result.Shape[0], 1);
-            Assert.AreEqual(result.Size, 1);
-            Assert.AreEqual(result[0], 7.6116626110202441f, 1e-3);
-
-            result = tensor2.Norm(0,p:3);
-
-            Console.WriteLine("tensor2.Norm(0,p:3) {0}", string.Join(", ", result.Data));
-            Assert.AreEqual(result.Shape.Length, 1);
-            Assert.AreEqual(result.Shape[0], 3);
-            Assert.AreEqual(result.Size, 3);
-            Assert.AreEqual(result[0], 4.02072576f, 1e-3);
-            Assert.AreEqual(result[1], 5.10446872f, 1e-3);
-            Assert.AreEqual(result[2], 6.24025147f, 1e-3);
-
-            result = tensor2.Norm(1,p:3);
-
-            Console.WriteLine("tensor2.Norm(1,p:3) {0}", string.Join(", ", result.Data));
-            Assert.AreEqual(result.Shape.Length, 1);
-            Assert.AreEqual(result.Shape[0], 2);
-            Assert.AreEqual(result.Size, 2);
-            Assert.AreEqual(result[0], 3.30192725f, 1e-3);
-            Assert.AreEqual(result[1], 7.39863622f, 1e-3);
         }
 
         [Test]
@@ -2422,10 +2384,10 @@ namespace OpenMined.Tests.Editor.FloatTensor
             int[] expectedShape2 = {2, 1};
 
             
-            for(int j = 0; j < splits[0].Shape.Length; j++)
+            for(int i = 0; i < splits[0].Shape.Length; i++)
             {
-                Assert.AreEqual(expectedShape1[j], splits[0].Shape[j]);
-                Assert.AreEqual(expectedShape2[j], splits[1].Shape[j]);
+                Assert.AreEqual(expectedShape1[i], splits[0].Shape[i]);
+                Assert.AreEqual(expectedShape2[i], splits[1].Shape[i]);
             }
             
             float[] splitData1 = {1, 2, 3, 5, 6, 7};
@@ -2462,9 +2424,9 @@ namespace OpenMined.Tests.Editor.FloatTensor
             Assert.AreEqual(1, splits.Length);
             Assert.AreEqual(2, splits[0].Shape.Length);
 
-            for(int j = 0; j < splits[0].Shape.Length; j++)
+            for(int i = 0; i < splits[0].Shape.Length; i++)
             {
-                Assert.AreEqual(shape[j], splits[0].Shape[j]);
+                Assert.AreEqual(shape[i], splits[0].Shape[i]);
             }
 
             for(int i = 0; i < shape[0]; i++){
@@ -2498,11 +2460,11 @@ namespace OpenMined.Tests.Editor.FloatTensor
             int[] expectedShape3 = {2, 2};
 
             
-            for(int j = 0; j < splits[0].Shape.Length; j++)
+            for(int i = 0; i < splits[0].Shape.Length; i++)
             {
-                Assert.AreEqual(expectedShape1[j], splits[0].Shape[j]);
-                Assert.AreEqual(expectedShape2[j], splits[1].Shape[j]);
-                Assert.AreEqual(expectedShape3[j], splits[2].Shape[j]);
+                Assert.AreEqual(expectedShape1[i], splits[0].Shape[i]);
+                Assert.AreEqual(expectedShape2[i], splits[1].Shape[i]);
+                Assert.AreEqual(expectedShape3[i], splits[2].Shape[i]);
             }
 
             float[] splitData1 = {1, 4};
