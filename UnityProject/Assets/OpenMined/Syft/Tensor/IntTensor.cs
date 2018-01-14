@@ -21,6 +21,10 @@ namespace OpenMined.Syft.Tensor
         // kernel pointers
         [SerializeField] 
         private static int AddElemIntKernel;
+        [SerializeField] 
+        private static int SubElemIntKernel;
+        [SerializeField] 
+        private static int SubElemIntKernel_;
 
 
         public IntTensor()
@@ -222,6 +226,67 @@ namespace OpenMined.Syft.Tensor
             return result;
         }
 
+        public IntTensor Sub(IntTensor x, bool inline = false)
+        {
+
+            IntTensor result;
+
+            if (dataOnGpu)
+            {
+                if (!inline)
+                {
+                    result = factory.Create(this.shape);
+
+                    result.Gpu(shader);
+
+                    int kernel_id = shader.FindKernel("SubElemInt");
+
+                    shader.SetBuffer(kernel_id, "SubElemIntDataA", this.DataBuffer);
+                    shader.SetBuffer(kernel_id, "SubElemIntDataB", x.DataBuffer);
+                    shader.SetBuffer(kernel_id, "SubElemIntDataResult", result.DataBuffer);
+
+                    shader.Dispatch(kernel_id, this.size, 1, 1);
+
+                    return result;
+                }
+                else
+                {
+                    result = this;
+                    
+                    int kernel_id = shader.FindKernel("SubElemInt_");
+
+                    shader.SetBuffer(kernel_id, "SubElemIntDataA_", this.DataBuffer);
+                    shader.SetBuffer(kernel_id, "SubElemIntDataB_", x.DataBuffer);
+
+                    shader.Dispatch(kernel_id, this.size, 1, 1);
+       
+                    return result;
+                }
+            }
+            else
+            {
+                result = inline? this : factory.Create(this.shape);
+                // run Subtraction on the CPU
+                result.Data = data.AsParallel().Zip(x.Data.AsParallel(), (a, b) => a - b).ToArray();
+
+                return result;
+            }
+              
+        }
+
+        public IntTensor Sub(int value, bool inline = false)
+        {
+            if (dataOnGpu)
+            {
+                throw new NotImplementedException();
+            }
+
+            IntTensor result = inline? this : factory.Create(this.shape);
+            result.Data = data.AsParallel().Select(x => x - value).ToArray();
+
+            return result;
+        }
+
         public int Trace()
         {
             if ((shape.Length != 2) || (shape[0] != shape[1]))
@@ -298,9 +363,10 @@ namespace OpenMined.Syft.Tensor
                 case "add_scalar_":
                 {
                     Debug.LogFormat("add_scalar_");
-                    this.Add(int.Parse(msgObj.tensorIndexParams[0]), inline: true);
+                    this.Sub(int.Parse(msgObj.tensorIndexParams[0]), inline: true);
                     return this.id + "";
                 }
+
                 case "get":
                 {
                     var param_to_get = msgObj.tensorIndexParams[0];
@@ -363,7 +429,32 @@ namespace OpenMined.Syft.Tensor
                     }
                     return "param not found or not configured with a getter";
                 }
-                    
+                case "sub_elem":
+                {
+                    Debug.LogFormat("sub_elem");
+                    var tensor_1 = factory.Get(int.Parse(msgObj.tensorIndexParams[0]));
+                    var result = this.Sub(tensor_1);
+                    return result.id + "";
+                }
+                case "sub_elem_":
+                {
+                    Debug.LogFormat("add_elem_");
+                    var tensor_1 = factory.Get(int.Parse(msgObj.tensorIndexParams[0]));
+                    this.Sub(tensor_1, inline: true);
+                    return this.id + "";
+                }
+                case "sub_scalar":
+                {
+                    Debug.LogFormat("sub_scalar");
+                    IntTensor result = this.Sub(int.Parse(msgObj.tensorIndexParams[0]));
+                    return result.Id + "";
+                }
+                case "sub_scalar_":
+                {
+                    Debug.LogFormat("sub_scalar_");
+                    this.Sub(int.Parse(msgObj.tensorIndexParams[0]), inline: true);
+                    return this.id + "";
+                }
                 case "to_numpy":
                 {
                     if (DataOnGpu)
