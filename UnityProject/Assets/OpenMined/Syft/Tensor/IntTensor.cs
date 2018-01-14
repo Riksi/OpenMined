@@ -366,7 +366,6 @@ namespace OpenMined.Syft.Tensor
                     this.Add(int.Parse(msgObj.tensorIndexParams[0]), inline: true);
                     return this.id + "";
                 }
-
                 case "get":
                 {
                     var param_to_get = msgObj.tensorIndexParams[0];
@@ -429,6 +428,7 @@ namespace OpenMined.Syft.Tensor
                     }
                     return "param not found or not configured with a getter";
                 }
+                
                 case "sub_elem":
                 {
                     Debug.LogFormat("sub_elem");
