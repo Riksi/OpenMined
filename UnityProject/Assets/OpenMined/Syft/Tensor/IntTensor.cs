@@ -363,7 +363,7 @@ namespace OpenMined.Syft.Tensor
                 case "add_scalar_":
                 {
                     Debug.LogFormat("add_scalar_");
-                    this.Sub(int.Parse(msgObj.tensorIndexParams[0]), inline: true);
+                    this.Add(int.Parse(msgObj.tensorIndexParams[0]), inline: true);
                     return this.id + "";
                 }
 
