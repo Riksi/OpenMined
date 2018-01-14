@@ -265,7 +265,7 @@ namespace OpenMined.Syft.Tensor
             }
             else
             {
-                result = inline? this : factory.Create(this.shape);
+                result = inline ? this : factory.Create(this.shape);
                 // run Subtraction on the CPU
                 result.Data = data.AsParallel().Zip(x.Data.AsParallel(), (a, b) => a - b).ToArray();
 
@@ -281,7 +281,7 @@ namespace OpenMined.Syft.Tensor
                 throw new NotImplementedException();
             }
 
-            IntTensor result = inline? this : factory.Create(this.shape);
+            IntTensor result = inline ? this : factory.Create(this.shape);
             result.Data = data.AsParallel().Select(x => x - value).ToArray();
 
             return result;
