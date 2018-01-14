@@ -428,7 +428,7 @@ namespace OpenMined.Syft.Tensor
                     }
                     return "param not found or not configured with a getter";
                 }
-                
+
                 case "sub_elem":
                 {
                     Debug.LogFormat("sub_elem");
@@ -438,7 +438,7 @@ namespace OpenMined.Syft.Tensor
                 }
                 case "sub_elem_":
                 {
-                    Debug.LogFormat("add_elem_");
+                    Debug.LogFormat("sub_elem_");
                     var tensor_1 = factory.Get(int.Parse(msgObj.tensorIndexParams[0]));
                     this.Sub(tensor_1, inline: true);
                     return this.id + "";
